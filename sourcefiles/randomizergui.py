@@ -19,6 +19,7 @@ class DataStore:
     self.difficulty = None
     self.inputFile = None
     self.outputFile = None
+    self.techRando = None
 
 datastore = DataStore()
 progressBar = None
@@ -126,20 +127,20 @@ def getGameFlagsFrame(window):
   datastore.flags['c'] = var
   tk.Checkbutton(frame, text="Locked characters(c)", variable = var).grid(row=row, sticky=tk.W, columnspan=3)
   row = row + 1
-  
-  # Tech rando
-  var = tk.IntVar()
-  datastore.flags['te'] = var
-  tk.Checkbutton(frame, text="Randomize techs(te)", variable = var).grid(row=row, sticky=tk.W, columnspan=3)
+
+  # Dropdown for the tech rando
+  techRandoValues = ["Normal", "Balanced Random", "Fully Random"]
+  label = tk.Label(frame, text="Tech Randomization:")
+  var = tk.StringVar()
+  var.set('Normal')
+  datastore.techRando = var
+  dropdown = tk.OptionMenu(frame, var, *techRandoValues)
+  dropdown.config(width = 20)
+  label.grid(row = row, column = 0, sticky=tk.W)
+  dropdown.grid(row = row, column = 1, sticky=tk.W)
   row = row + 1
 
-  # Balanced Tech rando
-  var = tk.IntVar()
-  datastore.flags['x'] = var
-  tk.Checkbutton(frame, text="Balanced Randomize techs(x)", variable = var).grid(row=row, sticky=tk.W, columnspan=3, padx=15)
-  row = row + 1
-
-  # Balanced Tech rando
+  # Slower Ayla
   var = tk.IntVar()
   datastore.flags['a'] = var
   tk.Checkbutton(frame, text="Slower Ayla(a)", variable = var).grid(row=row, sticky=tk.W, columnspan=3)

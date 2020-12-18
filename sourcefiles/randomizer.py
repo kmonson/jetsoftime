@@ -73,8 +73,8 @@ quick_pendant = ""
 locked_chars = ""
 tech_list = ""
 seed = ""
-tech_list_balanced = ""
 slower_ayla = ""
+tech_list = ""
    
 #
 # Handle the command line interface for the randomizer.
@@ -93,8 +93,8 @@ def command_line():
      global locked_chars
      global tech_list
      global seed
-     global tech_list_balanced
      global slower_ayla
+     global tech_list_balanced
      flags = ""
      sourcefile = input("Please enter ROM name or drag it onto the screen.")
      sourcefile = sourcefile.strip("\"")
@@ -154,10 +154,12 @@ def command_line():
      tech_list = tech_list.upper()
      if tech_list == "Y":
          flags = flags + "te"
+         tech_list = "Fully Random"
          tech_list_balanced = input("Do you want to balance the randomized techs(tx)? Y/N ")
          tech_list_balanced = tech_list_balanced.upper()
          if tech_list_balanced == "Y":
             flags = flags + "x"
+            tech_list = "Balanced Random"
      slower_ayla = input("Do you want to reduce Ayla's speed(a)? Y/N")
      slower_ayla = slower_ayla.upper()
      if slower_ayla == "Y":
@@ -192,17 +194,23 @@ def handle_gui(datastore):
   global locked_chars
   global tech_list
   global seed
-  global tech_list_balanced
   global slower_ayla
   
   # Get the user's chosen difficulty
   difficulty = datastore.difficulty.get()
+
+  # Get the user's chosen tech randomization
+  tech_list = datastore.techRando.get()
   
   # build the flag string from the gui datastore vars
   flags = difficulty[0]
   for flag, value in datastore.flags.items():
     if value.get() == 1:
       flags = flags + flag
+  if tech_list == "Fully Random":
+      flags = flags + "te"
+  elif tech_list == "Balanced Random":
+      flags = flags + "tex"
   
   # Set the flag variables based on what the user chose
   glitch_fixes = get_flag_value(datastore.flags['g'])
@@ -213,8 +221,6 @@ def handle_gui(datastore):
   zeal_end = get_flag_value(datastore.flags['z'])
   quick_pendant = get_flag_value(datastore.flags['p'])
   locked_chars = get_flag_value(datastore.flags['c'])
-  tech_list = get_flag_value(datastore.flags['te'])
-  tech_list_balanced = get_flag_value(datastore.flags['x'])
   slower_ayla = get_flag_value(datastore.flags['a'])
   
   # source ROM
@@ -249,7 +255,6 @@ def generate_rom():
      global locked_chars
      global tech_list
      global seed
-     global tech_list_balanced
      global slower_ayla
      outfile = sourcefile.split(".")
      outfile = str(outfile[0])
@@ -313,11 +318,10 @@ def generate_rom():
      if boss_scaler == "Y":
          print("Rescaling bosses based on key items..")
          boss_scale.scale_bosses(char_locs,keyitemlist,locked_chars,outfile)
-     if tech_list == "Y":
-         if tech_list_balanced == "Y":
-             tech_order.take_pointer_balanced(outfile)
-         else:
-             tech_order.take_pointer(outfile)
+     if tech_list == "Fully Random":
+         tech_order.take_pointer(outfile)
+     elif tech_list == "Balanced Random":
+         tech_order.take_pointer_balanced(outfile)
      # Tyrano Castle chest hack
      f = open(outfile,"r+b")
      f.seek(0x35F6D5)

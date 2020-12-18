@@ -51,8 +51,8 @@ def parse_keys(provided_key):
        provided_key = 0xDE
     if provided_key == "prism":
        provided_key = 0xD8
-    if provided_key == "tools":
-       provided_key = 0xDA
+    if provided_key == "masa2":
+       provided_key = 0x42
     if provided_key == "clone":
        provided_key = 0xE2
     if provided_key == "trigger":
@@ -70,7 +70,7 @@ def randomize_keys(char_locs,outfile,locked_chars):
     iterations = 0
     while len(loclist) != len(complete_list) and iterations != 3600:
        loclist = []
-       keyitems = ["pop","hilt","blade","stone","knife","gate","jerky","pendant","moon","prism","tools","clone",
+       keyitems = ["pop","hilt","blade","stone","knife","gate","jerky","pendant","moon","prism","masa2","clone",
        "trigger","medal","ribbon"]
        locations = {"zenan": "","taban": "","denadoro": "","snail": "","burrow": "","carpenter": "","trial": "",
        "melchior": "","claw": "","desert": "","arris": "","geno": "","sun": "","reptite": "","woe": ""}
@@ -98,7 +98,7 @@ def randomize_keys(char_locs,outfile,locked_chars):
               loclist.append("giant")
           elif heldkey == "pendant":
               loclist.append(2300)
-          elif heldkey == "tools":
+          elif heldkey == "masa2":
               loclist.append("ruins")
           elif heldkey == "medal":
               loclist.append("burrow")

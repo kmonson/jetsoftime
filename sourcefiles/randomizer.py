@@ -73,6 +73,8 @@ quick_pendant = ""
 locked_chars = ""
 tech_list = ""
 seed = ""
+tech_list_balanced = ""
+slower_ayla = ""
    
 #
 # Handle the command line interface for the randomizer.
@@ -91,6 +93,8 @@ def command_line():
      global locked_chars
      global tech_list
      global seed
+     global tech_list_balanced
+     global slower_ayla
      flags = ""
      sourcefile = input("Please enter ROM name or drag it onto the screen.")
      sourcefile = sourcefile.strip("\"")
@@ -149,7 +153,15 @@ def command_line():
      tech_list = input("Do you want to randomize techs(te)? Y/N ")
      tech_list = tech_list.upper()
      if tech_list == "Y":
-        flags = flags + "te"
+         flags = flags + "te"
+         tech_list_balanced = input("Do you want to balance the randomized techs(tx)? Y/N ")
+         tech_list_balanced = tech_list_balanced.upper()
+         if tech_list_balanced == "Y":
+            flags = flags + "x"
+     slower_ayla = input("Do you want to reduce Ayla's speed(a)? Y/N")
+     slower_ayla = slower_ayla.upper()
+     if slower_ayla == "Y":
+         flags = flags + "a"
     
 
 #
@@ -180,6 +192,8 @@ def handle_gui(datastore):
   global locked_chars
   global tech_list
   global seed
+  global tech_list_balanced
+  global slower_ayla
   
   # Get the user's chosen difficulty
   difficulty = datastore.difficulty.get()
@@ -200,6 +214,8 @@ def handle_gui(datastore):
   quick_pendant = get_flag_value(datastore.flags['p'])
   locked_chars = get_flag_value(datastore.flags['c'])
   tech_list = get_flag_value(datastore.flags['te'])
+  tech_list_balanced = get_flag_value(datastore.flags['x'])
+  slower_ayla = get_flag_value(datastore.flags['a'])
   
   # source ROM
   sourcefile = datastore.inputFile.get()
@@ -233,6 +249,8 @@ def generate_rom():
      global locked_chars
      global tech_list
      global seed
+     global tech_list_balanced
+     global slower_ayla
      outfile = sourcefile.split(".")
      outfile = str(outfile[0])
      if flags == "":
@@ -281,7 +299,10 @@ def generate_rom():
      print("Randomizing shops...")
      shops.randomize_shops(outfile)
      print("Randomizing character locations...")
-     char_locs = char_slots.randomize_char_positions(outfile,locked_chars,lost_worlds)
+     if slower_ayla == "Y":
+         char_locs = char_slots.randomize_char_positions_a(outfile,locked_chars,lost_worlds)
+     else:
+         char_locs = char_slots.randomize_char_positions(outfile,locked_chars,lost_worlds)
      print("Now placing key items...")
      if lost_worlds == "Y":
          keyitemlist = keyitems.randomize_lost_worlds_keys(char_locs,outfile)
@@ -293,7 +314,10 @@ def generate_rom():
          print("Rescaling bosses based on key items..")
          boss_scale.scale_bosses(char_locs,keyitemlist,locked_chars,outfile)
      if tech_list == "Y":
-        tech_order.take_pointer(outfile)
+         if tech_list_balanced == "Y":
+             tech_order.take_pointer_balanced(outfile)
+         else:
+             tech_order.take_pointer(outfile)
      # Tyrano Castle chest hack
      f = open(outfile,"r+b")
      f.seek(0x35F6D5)

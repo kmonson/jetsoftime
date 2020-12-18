@@ -229,6 +229,42 @@ def randomize_tech_order(character):
           new_ids[new_id_names[picked_tech["tech_id"]-1]] = character[i]["tech_id"]
           avail_techs.remove(picked_tech)
           i += 1
+
+def randomize_tech_order_balanced(character):
+    i = 0
+    new_id_names = ["cyclone", "slash", "lightning", "spincut", "lightning2", "life", "confuse", "luminaire", "aura", 
+    "provoke", "ice", "cure", "haste", "ice2", "cure2", "life2", "flametoss", "hypnowave", "fire", "napalm", 
+    "protect", "fire2", "megabomb", "flare", "rocketpunch", "curebeam", "laserspin", "robotackle", "healbeam", 
+    "uzzipunch", "areabomb", "shock", "slurp", "slurpcut", "water", "heal", "leapslash", "water2", "cure2_2", 
+    "frogsquash", "kiss", "rollokick", "catattack", "rockthrow", "charm", "tailspin", "dinotail", "triplekick", 
+    "lightning2_2", "ice2_2", "fire2_2", "darkbomb", "magicwall", "darkmist", "blackhole", "darkmatter"]
+    avail_techs = character.copy()
+    ultimate_tech = avail_techs[7]
+    while i < len(character):
+          picked_tech = rand.choice(avail_techs)
+          while picked_tech == ultimate_tech and i<7:
+              picked_tech = rand.choice(avail_techs)
+          control_offset = control_pointer + ((character[i]["tech_id"]-1) * 11)
+          control_offset1 = control_offset + 3
+          write_bytes(picked_tech["attack_byte"],control_offset1)
+          control_offset2 = control_offset + 8
+          write_bytes(picked_tech["effect"],control_offset2)
+          effect_offset = effect_pointer + ((character[i]["tech_id"]-1) * 12)
+          write_bytes(picked_tech["efpointer"],effect_offset)
+          animation_offset = animation_pointer + ((character[i]["tech_id"]-1) * 7)
+          write_bytes(picked_tech["anim"],animation_offset)
+          text_offset = text_pointer + ((character[i]["tech_id"]-1) * 11)
+          write_bytes(picked_tech["text"],text_offset)
+          describe_offset = describe_pointer + ((character[i]["tech_id"]-1) * 2)
+          write_bytes(picked_tech["descpointer"],describe_offset)
+          mp_offset = mp_pointer + ((character[i]["tech_id"]-1) * 1)
+          write_bytes(picked_tech["mp_cost"],mp_offset)
+          targeting_offset = targeting_pointer + ((character[i]["tech_id"]-1) * 2)
+          write_bytes(picked_tech["targeting"],targeting_offset)
+          new_ids[new_id_names[picked_tech["tech_id"]-1]] = character[i]["tech_id"]
+          avail_techs.remove(picked_tech)
+          i += 1
+
 def rewrite_menu_techs():
     menu_start = 0x3FF831
     menu_techs = ["aura","cure","cure2","curebeam","healbeam","slurp","heal","cure2_2","kiss"]
@@ -967,6 +1003,24 @@ def take_pointer(pointer):
     chars = [crono, marle, lucca, robo, frog, ayla, magus]
     for character in chars:
         randomize_tech_order(character)
+    rewrite_menu_techs()
+    rewrite_combo_techs()
+    file_pointer.close()
+
+def take_pointer_balanced(pointer):
+    global file_pointer
+    file_pointer = pointer
+    file_pointer = open(file_pointer,"r+b")
+    crono = [cyclone,slash,lightning,spincut,lightning2,life,confuse,luminaire]
+    marle = [aura,provoke,ice,cure,haste,ice2,cure2,life2]
+    lucca = [flametoss,hypnowave,fire,napalm,protect,fire2,megabomb,flare]
+    robo = [rocketpunch,curebeam,laserspin,robotackle,healbeam,uzzipunch,areabomb,shock]
+    frog = [slurp,slurpcut,water,heal,leapslash,water2,cure2_2,frogsquash]
+    ayla = [kiss,rollokick,catattack,rockthrow,charm,tailspin,dinotail,triplekick]
+    magus = [lightning2_2,ice2_2,fire2_2,darkbomb,magicwall,darkmist,blackhole,darkmatter]
+    chars = [crono, marle, lucca, robo, frog, ayla, magus]
+    for character in chars:
+        randomize_tech_order_balanced(character)
     rewrite_menu_techs()
     rewrite_combo_techs()
     file_pointer.close()

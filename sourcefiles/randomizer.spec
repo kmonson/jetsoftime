@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['randomizer.py'],
-             pathex=['F:\\jetsoftime\\sourcefiles'],
+             pathex=['C:\\Users\\Kettl\\source\\repos\\jetsoftime\\sourcefiles'],
              binaries=[],
              datas=[],
              hiddenimports=[],

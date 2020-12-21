@@ -1,2 +1,2 @@
-{'zenan': 'blade', 'taban': 'jerky', 'denadoro': 'moon', 'snail': 'ribbon', 'burrow': 'prism', 'carpenter': 'trigger', 'trial': 'gate', 'melchior': 'stone', 'claw': 'masa2', 'desert': 'pendant', 'arris': 'medal', 'geno': 'knife', 'sun': 'hilt', 'reptite': 'clone', 'woe': 'pop'}
-{'start': 'Chrono', 'start2': 'Frog', 'cathedral': 'Marle', 'castle': 'Robo', 'proto': 'Magus', 'burrow': 'Lucca', 'dactyl': 'Ayla'}
+{'zenan': 'medal', 'taban': 'prism', 'denadoro': 'jerky', 'snail': 'moon', 'burrow': 'pendant', 'carpenter': 'gate', 'trial': 'trigger', 'melchior': 'ribbon', 'claw': 'knife', 'desert': 'pop', 'arris': 'masa2', 'geno': 'clone', 'sun': 'blade', 'reptite': 'stone', 'woe': 'hilt'}
+{'start': 'Chrono', 'start2': 'Frog', 'cathedral': 'Lucca', 'castle': 'Magus', 'proto': 'Ayla', 'burrow': 'Marle', 'dactyl': 'Robo'}

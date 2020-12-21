@@ -170,30 +170,56 @@ def write_chars(file_pointer,char_dict,locked_chars,lost_worlds,outfile):
                 file_pointer.seek(charloads[i])
                 file_pointer.write(st.pack("B",loadchars[char]))
             i += 1
-def randomize_char_positions(outfile,locked_chars,lost_worlds):
+def randomize_char_positions(outfile,locked_chars,lost_worlds,a_flag, chars, locs):
     f = open(outfile,"r+b")
     character_locations = {"start": "", "start2": "", "cathedral": "", "castle": "", "proto": "", "burrow": "", "dactyl": ""}
-    characters = [chrono, marle, lucca, robo, frog, ayla, magus]
-    for location in character_locations:
-        character_locations[location] = rand.choice(characters)
-        chosen_char = character_locations[location]
-        set_stats(f,chosen_char,location,lost_worlds)
-        characters.remove(chosen_char)
-    write_chars(f,character_locations,locked_chars,lost_worlds,outfile)
-    f.close
-    return character_locations
+    characters = [chrono, marle, lucca, frog, robo, ayla, magus]
+    # Sort the locs out to match character_locations
+    for loc in locs :
+        if loc == "Start1" :
+            locs[locs.index("Start1")] = "start"
+        elif loc == "Start2":
+            locs[locs.index("Start2")] = "start2"
+        elif loc == "Cathedral":
+            locs[locs.index("Cathedral")] = "cathedral"
+        elif loc == "Guardia Castle":
+            locs[locs.index("Guardia Castle")] = "castle"
+        elif loc == "Proto Dome":
+            locs[locs.index("Proto Dome")] = "proto"
+        elif loc == "Frog Burrow":
+            locs[locs.index("Frog Burrow")] = "burrow"
+        elif loc == "Dactyl Nest":
+            locs[locs.index("Dactyl Nest")] = "dactyl"
 
-def randomize_char_positions_a(outfile,locked_chars,lost_worlds):
-    f = open(outfile,"r+b")
-    character_locations = {"start": "", "start2": "", "cathedral": "", "castle": "", "proto": "", "burrow": "", "dactyl": ""}
-    characters = [chrono, marle, lucca, robo, frog, ayla, magus]
+    unset_chars = []
+    set_chars = []
+
+    x = 0
+    for loc in locs:
+        if loc == "":
+            unset_chars.append(characters[x])
+        else:
+            set_chars.append(characters[x])
+        x = x+1
+
     for location in character_locations:
-        character_locations[location] = rand.choice(characters)
-        chosen_char = character_locations[location]
-        set_stats_a(f,chosen_char,location,lost_worlds)
+        if location in locs:
+            locs.index(location) < len(locs)
+            character_locations[location] = characters[locs.index(location)]
+            chosen_char = character_locations[location]
+            if a_flag == "Y" :
+                set_stats_a(f,chosen_char,location,lost_worlds)
+            else:
+                set_stats(f,chosen_char,location,lost_worlds)
+        else:
+            character_locations[location] = rand.choice(unset_chars)
+            chosen_char = character_locations[location]
+            if a_flag == "Y" :
+                set_stats_a(f,chosen_char,location,lost_worlds)
+            else:
+                set_stats(f,chosen_char,location,lost_worlds)
+            unset_chars.remove(chosen_char)
         characters.remove(chosen_char)
     write_chars(f,character_locations,locked_chars,lost_worlds,outfile)
     f.close
     return character_locations
-if __name__ == "__main__":
-    randomize_char_positions("Project.sfc","N")

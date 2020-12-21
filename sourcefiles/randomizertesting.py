@@ -14,7 +14,7 @@ import patcher as patches
 import enemywriter as enemystuff
 import bossscaler as boss_scale
 import techwriter as tech_order
-import randomizergui as gui
+import randomizerguitesting as gui
 
 def tenthousands_digit(digit):
     digit = st.unpack(">B",digit)
@@ -75,6 +75,8 @@ tech_list = ""
 seed = ""
 slower_ayla = ""
 tech_list = ""
+characters = ['Crono', 'Marle', 'Lucca', 'Frog', 'Robo', 'Ayla', 'Magus']
+char_locs = []
    
 #
 # Handle the command line interface for the randomizer.
@@ -164,7 +166,6 @@ def command_line():
      slower_ayla = slower_ayla.upper()
      if slower_ayla == "Y":
          flags = flags + "a"
-    
 
 #
 # Given a tk IntVar, convert it to a Y/N value for use by the randomizer.
@@ -195,6 +196,17 @@ def handle_gui(datastore):
   global tech_list
   global seed
   global slower_ayla
+  global characters
+  global char_locs
+
+  # Hopefully get the chosen character locations
+  x = 0
+  while x < len(characters):
+    if len(char_locs)>6:
+        char_locs[x] = datastore.charLocVars[characters[x]].get()
+    else :
+        char_locs.append(datastore.charLocVars[characters[x]].get())
+    x = x + 1
   
   # Get the user's chosen difficulty
   difficulty = datastore.difficulty.get()
@@ -256,6 +268,8 @@ def generate_rom():
      global tech_list
      global seed
      global slower_ayla
+     global characters
+     global char_locs
      outfile = sourcefile.split(".")
      outfile = str(outfile[0])
      if flags == "":
@@ -304,10 +318,7 @@ def generate_rom():
      print("Randomizing shops...")
      shops.randomize_shops(outfile)
      print("Randomizing character locations...")
-     if slower_ayla == "Y":
-         char_locs = char_slots.randomize_char_positions_a(outfile,locked_chars,lost_worlds)
-     else:
-         char_locs = char_slots.randomize_char_positions(outfile,locked_chars,lost_worlds)
+     char_locs = char_slots.randomize_char_positions(outfile,locked_chars,lost_worlds,slower_ayla,characters,char_locs)
      print("Now placing key items...")
      if lost_worlds == "Y":
          keyitemlist = keyitems.randomize_lost_worlds_keys(char_locs,outfile)

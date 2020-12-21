@@ -200,6 +200,9 @@ def randomize_char_positions(outfile,locked_chars,lost_worlds,a_flag, chars, loc
             unset_chars.append(characters[x])
         else:
             set_chars.append(characters[x])
+        while locs.count(loc) > 1 and loc != "":
+            index_pos = len(locs)-locs[::-1].index(loc)-1
+            locs[index_pos] = ""
         x = x+1
 
     for location in character_locations:

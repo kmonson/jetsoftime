@@ -73,7 +73,6 @@ quick_pendant = ""
 locked_chars = ""
 tech_list = ""
 seed = ""
-slower_ayla = ""
 tech_list = ""
    
 #
@@ -93,7 +92,6 @@ def command_line():
      global locked_chars
      global tech_list
      global seed
-     global slower_ayla
      global tech_list_balanced
      flags = ""
      sourcefile = input("Please enter ROM name or drag it onto the screen.")
@@ -160,10 +158,6 @@ def command_line():
          if tech_list_balanced == "Y":
             flags = flags + "x"
             tech_list = "Balanced Random"
-     slower_ayla = input("Do you want to reduce Ayla's speed(a)? Y/N")
-     slower_ayla = slower_ayla.upper()
-     if slower_ayla == "Y":
-         flags = flags + "a"
     
 
 #
@@ -194,7 +188,6 @@ def handle_gui(datastore):
   global locked_chars
   global tech_list
   global seed
-  global slower_ayla
   
   # Get the user's chosen difficulty
   difficulty = datastore.difficulty.get()
@@ -221,7 +214,6 @@ def handle_gui(datastore):
   zeal_end = get_flag_value(datastore.flags['z'])
   quick_pendant = get_flag_value(datastore.flags['p'])
   locked_chars = get_flag_value(datastore.flags['c'])
-  slower_ayla = get_flag_value(datastore.flags['a'])
   
   # source ROM
   sourcefile = datastore.inputFile.get()
@@ -255,7 +247,6 @@ def generate_rom():
      global locked_chars
      global tech_list
      global seed
-     global slower_ayla
      outfile = sourcefile.split(".")
      outfile = str(outfile[0])
      if flags == "":
@@ -304,10 +295,7 @@ def generate_rom():
      print("Randomizing shops...")
      shops.randomize_shops(outfile)
      print("Randomizing character locations...")
-     if slower_ayla == "Y":
-         char_locs = char_slots.randomize_char_positions_a(outfile,locked_chars,lost_worlds)
-     else:
-         char_locs = char_slots.randomize_char_positions(outfile,locked_chars,lost_worlds)
+     char_locs = char_slots.randomize_char_positions(outfile,locked_chars,lost_worlds)
      print("Now placing key items...")
      if lost_worlds == "Y":
          keyitemlist = keyitems.randomize_lost_worlds_keys(char_locs,outfile)

@@ -139,12 +139,6 @@ def getGameFlagsFrame(window):
   label.grid(row = row, column = 0, sticky=tk.W)
   dropdown.grid(row = row, column = 1, sticky=tk.W)
   row = row + 1
-
-  # Slower Ayla
-  var = tk.IntVar()
-  datastore.flags['a'] = var
-  tk.Checkbutton(frame, text="Slower Ayla(a)", variable = var).grid(row=row, sticky=tk.W, columnspan=3)
-  row = row + 1
   
   # Let the user choose a seed (optional parameter)
   tk.Label(frame, text="Seed(optional):").grid(row=row, column=0, sticky=tk.E)

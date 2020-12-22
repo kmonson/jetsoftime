@@ -230,7 +230,7 @@ def randomize_tech_order(character):
           avail_techs.remove(picked_tech)
           i += 1
 
-def randomize_tech_order_balanced(character):
+def randomize_tech_order_balanced(character,balanced_char):
     i = 0
     new_id_names = ["cyclone", "slash", "lightning", "spincut", "lightning2", "life", "confuse", "luminaire", "aura", 
     "provoke", "ice", "cure", "haste", "ice2", "cure2", "life2", "flametoss", "hypnowave", "fire", "napalm", 
@@ -238,12 +238,12 @@ def randomize_tech_order_balanced(character):
     "uzzipunch", "areabomb", "shock", "slurp", "slurpcut", "water", "heal", "leapslash", "water2", "cure2_2", 
     "frogsquash", "kiss", "rollokick", "catattack", "rockthrow", "charm", "tailspin", "dinotail", "triplekick", 
     "lightning2_2", "ice2_2", "fire2_2", "darkbomb", "magicwall", "darkmist", "blackhole", "darkmatter"]
-    avail_techs = character.copy()
-    ultimate_tech = avail_techs[7]
+    avail_techs = balanced_char.copy()
     while i < len(character):
-          picked_tech = rand.choice(avail_techs)
-          while picked_tech == ultimate_tech and i<7:
-              picked_tech = rand.choice(avail_techs)
+          if len(avail_techs) == 1:
+            picked_tech = avail_techs[0]
+          else:
+            picked_tech = avail_techs[rand.randrange(0,len(avail_techs)-1)]
           control_offset = control_pointer + ((character[i]["tech_id"]-1) * 11)
           control_offset1 = control_offset + 3
           write_bytes(picked_tech["attack_byte"],control_offset1)
@@ -262,7 +262,7 @@ def randomize_tech_order_balanced(character):
           targeting_offset = targeting_pointer + ((character[i]["tech_id"]-1) * 2)
           write_bytes(picked_tech["targeting"],targeting_offset)
           new_ids[new_id_names[picked_tech["tech_id"]-1]] = character[i]["tech_id"]
-          avail_techs.remove(picked_tech)
+          while picked_tech in avail_techs: avail_techs.remove(picked_tech)
           i += 1
 
 
@@ -1019,9 +1019,66 @@ def take_pointer_balanced(pointer):
     frog = [slurp,slurpcut,water,heal,leapslash,water2,cure2_2,frogsquash]
     ayla = [kiss,rollokick,catattack,rockthrow,charm,tailspin,dinotail,triplekick]
     magus = [lightning2_2,ice2_2,fire2_2,darkbomb,magicwall,darkmist,blackhole,darkmatter]
+    b_crono = [cyclone,cyclone,cyclone,cyclone,cyclone,cyclone,cyclone,cyclone,
+             slash,slash,slash,slash,slash,slash,slash,
+             lightning,lightning,lightning,lightning,lightning,lightning,
+             spincut,spincut,spincut,spincut,
+             lightning2,lightning2,lightning2,
+             life,life,life,life,life,
+             confuse,
+             luminaire,luminaire]
+    b_marle = [aura,aura,aura,aura,aura,aura,aura,
+             provoke,provoke,provoke,provoke,provoke,provoke,provoke,provoke,
+             ice,ice,ice,ice,ice,ice,
+             cure,cure,cure,cure,cure,
+             haste,
+             ice2,ice2,
+             cure2,cure2,cure2,life2,
+             life2,life2,life2]
+    b_lucca = [flametoss,flametoss,flametoss,flametoss,flametoss,flametoss,flametoss,flametoss,
+             hypnowave,hypnowave,hypnowave,hypnowave,
+             fire,fire,fire,fire,fire,fire,
+             napalm,napalm,napalm,napalm,napalm,
+             protect,protect,protect,protect,protect,protect,protect,
+             fire2,fire2,
+             megabomb,megabomb,megabomb,
+             flare]
+    b_robo = [rocketpunch,rocketpunch,rocketpunch,rocketpunch,rocketpunch,rocketpunch,rocketpunch,rocketpunch,
+            curebeam,curebeam,curebeam,curebeam,curebeam,curebeam,curebeam,
+            laserspin,laserspin,laserspin,laserspin,laserspin,laserspin,
+            robotackle,robotackle,
+            healbeam,healbeam,healbeam,
+            uzzipunch,
+            areabomb,areabomb,areabomb,areabomb,areabomb,
+            shock,shock,shock,shock]
+    b_frog = [slurp,slurp,slurp,slurp,slurp,slurp,slurp,slurp,
+            slurpcut,slurpcut,slurpcut,slurpcut,slurpcut,slurpcut,
+            water,water,water,water,water,water,water,
+            heal,
+            leapslash,leapslash,leapslash,
+            water2,water2,
+            cure2_2,cure2_2,cure2_2,cure2_2,
+            frogsquash,frogsquash,frogsquash,frogsquash,frogsquash]
+    b_ayla = [kiss,kiss,kiss,kiss,kiss,kiss,kiss,kiss,
+            rollokick,rollokick,rollokick,rollokick,rollokick,rollokick,rollokick,
+            catattack,catattack,catattack,catattack,catattack,
+            rockthrow,rockthrow,
+            charm,charm,charm,charm,charm,charm,
+            tailspin,tailspin,tailspin,tailspin,
+            dinotail,dinotail,dinotail,
+            triplekick]
+    b_magus = [lightning2_2,lightning2_2,lightning2_2,lightning2_2,lightning2_2,
+             ice2_2,ice2_2,ice2_2,ice2_2,ice2_2,
+             fire2_2,fire2_2,fire2_2,fire2_2,fire2_2,
+             darkbomb,darkbomb,darkbomb,
+             magicwall,magicwall,magicwall,magicwall,magicwall,magicwall,magicwall,
+             darkmist,darkmist,
+             blackhole,blackhole,blackhole,blackhole,blackhole,blackhole,blackhole,blackhole,
+             darkmatter]
     chars = [crono, marle, lucca, robo, frog, ayla, magus]
+    balanced_chars = [b_crono, b_marle, b_lucca, b_robo, b_frog, b_ayla, b_magus]
     for character in chars:
-        randomize_tech_order_balanced(character)
+        randomize_tech_order_balanced(character, balanced_chars[chars.index(character)])
     rewrite_menu_techs()
     rewrite_combo_techs()
     file_pointer.close()

@@ -128,6 +128,12 @@ def getGameFlagsFrame(window):
   tk.Checkbutton(frame, text="Locked characters(c)", variable = var).grid(row=row, sticky=tk.W, columnspan=3)
   row = row + 1
 
+  # Unlocked Magic
+  var = tk.IntVar()
+  datastore.flags['m'] = var
+  tk.Checkbutton(frame, text="Unlocked Magic(m)", variable = var).grid(row=row, sticky=tk.W, columnspan=3)
+  row = row + 1
+
   # Dropdown for the tech rando
   techRandoValues = ["Normal", "Balanced Random", "Fully Random"]
   label = tk.Label(frame, text="Tech Randomization:")

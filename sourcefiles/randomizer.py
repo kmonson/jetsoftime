@@ -74,6 +74,7 @@ locked_chars = ""
 tech_list = ""
 seed = ""
 tech_list = ""
+unlocked_magic = ""
    
 #
 # Handle the command line interface for the randomizer.
@@ -93,6 +94,7 @@ def command_line():
      global tech_list
      global seed
      global tech_list_balanced
+     global unlocked_magic
      flags = ""
      sourcefile = input("Please enter ROM name or drag it onto the screen.")
      sourcefile = sourcefile.strip("\"")
@@ -158,6 +160,10 @@ def command_line():
          if tech_list_balanced == "Y":
             flags = flags + "x"
             tech_list = "Balanced Random"
+     unlocked_magic = input("Do you want the ability to learn all techs without visiting Spekkio(m)? Y/N")
+     unlocked_magic = unlocked_magic.upper()
+     if unlocked_magic == "Y":
+         flags = flags + "te"
     
 
 #
@@ -188,6 +194,7 @@ def handle_gui(datastore):
   global locked_chars
   global tech_list
   global seed
+  global unlocked_magic
   
   # Get the user's chosen difficulty
   difficulty = datastore.difficulty.get()
@@ -214,6 +221,7 @@ def handle_gui(datastore):
   zeal_end = get_flag_value(datastore.flags['z'])
   quick_pendant = get_flag_value(datastore.flags['p'])
   locked_chars = get_flag_value(datastore.flags['c'])
+  unlocked_magic = get_flag_value(datastore.flags['m'])
   
   # source ROM
   sourcefile = datastore.inputFile.get()
@@ -247,6 +255,7 @@ def generate_rom():
      global locked_chars
      global tech_list
      global seed
+     global unlocked_magic
      outfile = sourcefile.split(".")
      outfile = str(outfile[0])
      if flags == "":
@@ -287,6 +296,8 @@ def generate_rom():
          pass
      elif quick_pendant == "Y":
              patches.patch_file("patches/fast_charge_pendant.txt",outfile)
+     if unlocked_magic == "Y":
+         bigpatches.write_patch("patches/fastmagic.ips",outfile)
      print("Randomizing treasures...")
      treasures.randomize_treasures(outfile,difficulty)
      hardcoded_items.randomize_hardcoded_items(outfile)

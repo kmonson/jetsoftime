@@ -349,6 +349,7 @@ def generate_rom():
        if locked_chars == "Y":
          bigpatches.write_patch("patches/bangorfix.ips",outfile)
        f.close()
+     print("Randomization completed successfully.")
      
      
      

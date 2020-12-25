@@ -334,6 +334,9 @@ def generate_rom():
        if locked_chars == "Y":
          bigpatches.write_patch("patches/bangorfix.ips",outfile)
        f.close()
+     #Lost Worlds EOT fix
+     if lost_worlds == "Y":
+         bigpatches.write_patch("patches/losteot.ips")
      print("Randomization completed successfully.")
      
      

@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
+    "\\patches",
     "\\sourcefiles"
   ],
-  "SelectedNode": "\\sourcefiles\\randomizerguitesting.py",
+  "SelectedNode": "\\sourcefiles\\randomizer.py",
   "PreviewInSolutionExplorer": false
 }

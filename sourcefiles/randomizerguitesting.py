@@ -69,6 +69,7 @@ def browseForRom():
 def getGameFlagsFrame(window):
   frame = tk.Frame(window, borderwidth = 1)
   row = 0
+  pendantCheckbox = None
   
   # Dropdown for the difficulty flags
   difficultyValues = ["easy", "normal", "hard"]
@@ -102,9 +103,22 @@ def getGameFlagsFrame(window):
   row = row + 1
   
   # Lost Worlds
+  
+  #
+  # Callback function to disable the early pendant charge option when 
+  # the user selects the Lost Worlds mode. Early Pendant is not avaiable
+  # in Lost Worlds mode.
+  #
+  def togglePendantState():
+    if datastore.flags['l'].get() == 1:
+      datastore.flags['p'].set(0)
+      pendantCheckbox.config(state=tk.DISABLED)
+    else:
+      pendantCheckbox.config(state=tk.NORMAL)
+      
   var = tk.IntVar()
   datastore.flags['l'] = var
-  tk.Checkbutton(frame, text="Lost Worlds(l)", variable = var).grid(row=row, sticky=tk.W, columnspan=3)
+  tk.Checkbutton(frame, text="Lost Worlds(l)", variable = var, command=togglePendantState).grid(row=row, sticky=tk.W, columnspan=3)
   row = row + 1
   
   # Boss scaling
@@ -122,7 +136,8 @@ def getGameFlagsFrame(window):
   # Early pendant charge
   var = tk.IntVar()
   datastore.flags['p'] = var
-  tk.Checkbutton(frame, text="Early Pendant Charge(p)", variable = var).grid(row=row, sticky=tk.W, columnspan=3)
+  pendantCheckbox= tk.Checkbutton(frame, text="Early Pendant Charge(p)", variable = var)
+  pendantCheckbox.grid(row=row, sticky=tk.W, columnspan=3)
   row = row + 1
   
   # Locked characters

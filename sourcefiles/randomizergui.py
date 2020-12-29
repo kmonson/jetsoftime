@@ -59,6 +59,74 @@ def generateHandler():
 def browseForRom():
   datastore.inputFile.set(askopenfilename())
 
+def flagClear():
+    datastore.difficulty.set("normal")
+    datastore.flags['g'].set(0)
+    datastore.flags['s'].set(0)
+    datastore.flags['d'].set(0)
+    datastore.flags['l'].set(0)
+    datastore.flags['b'].set(0)
+    datastore.flags['z'].set(0)
+    datastore.flags['p'].set(0)
+    datastore.flags['c'].set(0)
+    datastore.flags['m'].set(0)
+    datastore.techRando.set("Normal")
+
+def presetRace():
+    flagClear()
+    datastore.difficulty.set("normal")
+    datastore.flags['g'].set(1)
+    datastore.flags['s'].set(1)
+    datastore.flags['d'].set(1)
+    datastore.flags['z'].set(1)
+    datastore.flags['p'].set(1)
+    datastore.techRando.set("Fully Random")
+
+def presetNew():
+    flagClear()
+    datastore.difficulty.set("easy")
+    datastore.flags['g'].set(1)
+    datastore.flags['s'].set(1)
+    datastore.flags['d'].set(1)
+    datastore.flags['z'].set(1)
+    datastore.flags['p'].set(1)
+    datastore.flags['m'].set(1)
+    datastore.techRando.set("Fully Random")
+
+def presetLost():
+    flagClear()
+    datastore.difficulty.set("normal")
+    datastore.flags['g'].set(1)
+    datastore.flags['s'].set(1)
+    datastore.flags['d'].set(1)
+    datastore.flags['z'].set(1)
+    datastore.flags['l'].set(1)
+    datastore.techRando.set("Fully Random")
+
+def presetHard():
+    flagClear()
+    datastore.difficulty.set("hard")
+    datastore.flags['g'].set(1)
+    datastore.flags['s'].set(1)
+    datastore.flags['d'].set(1)
+    datastore.flags['b'].set(1)
+    datastore.flags['c'].set(1)
+    datastore.techRando.set("Balanced Random")
+
+# Frame for presets, hopefully.
+
+def getPresetsFrame(window):
+  frame = tk.Frame(window, borderwidth=1)
+  row = 0
+  #Presets Header
+  tk.Label(frame, text="Preset Selection:").grid(row=row, column=0, sticky=tk.E)
+  
+  #Preset Buttons
+  tk.Button(frame, text="Race", command=presetRace).grid(row=row, column=1)
+  tk.Button(frame, text="New Player", command=presetNew).grid(row=row, column=2)
+  tk.Button(frame, text="Lost Worlds", command=presetLost).grid(row=row, column=3)
+  tk.Button(frame, text="Hard", command=presetHard).grid(row=row, column=4)
+  return frame
   
 #
 # Populate and return the frame where the user can pick game flags.
@@ -148,6 +216,12 @@ def getGameFlagsFrame(window):
   tk.Checkbutton(frame, text="Unlocked Magic(m)", variable = var).grid(row=row, sticky=tk.W, columnspan=3)
   row = row + 1
 
+  # Quiet Mode (No Music)
+  var = tk.IntVar()
+  datastore.flags['q'] = var
+  tk.Checkbutton(frame, text="Quiet Mode - No Music (q)", variable = var).grid(row=row, sticky=tk.W, columnspan=3)
+  row = row + 1
+
   # Dropdown for the tech rando
   techRandoValues = ["Normal", "Balanced Random", "Fully Random"]
   label = tk.Label(frame, text="Tech Randomization:")
@@ -188,6 +262,9 @@ def getGameFlagsFrame(window):
 def guiMain():
   mainWindow = tk.Tk()
   mainWindow.wm_title("Jets of Time")
+
+  presetFrame = getPresetsFrame(mainWindow)
+  presetFrame.pack(expand=1, fill="both")
   
   optionsFrame = getGameFlagsFrame(mainWindow)
   optionsFrame.pack(expand=1, fill="both")

@@ -75,6 +75,7 @@ tech_list = ""
 seed = ""
 tech_list = ""
 unlocked_magic = ""
+quiet_mode = ""
    
 #
 # Handle the command line interface for the randomizer.
@@ -95,6 +96,7 @@ def command_line():
      global seed
      global tech_list_balanced
      global unlocked_magic
+     global quiet_mode
      flags = ""
      sourcefile = input("Please enter ROM name or drag it onto the screen.")
      sourcefile = sourcefile.strip("\"")
@@ -164,6 +166,10 @@ def command_line():
      unlocked_magic = unlocked_magic.upper()
      if unlocked_magic == "Y":
          flags = flags + "te"
+     quiet_mode = input("Do you want to enable quiet mode (No music)(q)? Y/N")
+     quiet_mode = quiet_mode.upper()
+     if quiet_mode == "Y":
+         flags = flags + "q"
     
 
 #
@@ -195,6 +201,7 @@ def handle_gui(datastore):
   global tech_list
   global seed
   global unlocked_magic
+  global quiet_mode
   
   # Get the user's chosen difficulty
   difficulty = datastore.difficulty.get()
@@ -222,6 +229,7 @@ def handle_gui(datastore):
   quick_pendant = get_flag_value(datastore.flags['p'])
   locked_chars = get_flag_value(datastore.flags['c'])
   unlocked_magic = get_flag_value(datastore.flags['m'])
+  quiet_mode = get_flag_value(datastore.flags['q'])
   
   # source ROM
   sourcefile = datastore.inputFile.get()
@@ -256,6 +264,7 @@ def generate_rom():
      global tech_list
      global seed
      global unlocked_magic
+     global quiet_mode
      outfile = sourcefile.split(".")
      outfile = str(outfile[0])
      if flags == "":
@@ -321,6 +330,8 @@ def generate_rom():
          tech_order.take_pointer(outfile)
      elif tech_list == "Balanced Random":
          tech_order.take_pointer_balanced(outfile)
+     if quiet_mode == "Y":
+         bigpatches.write_patch("patches/nomusic.ips",outfile)
      # Tyrano Castle chest hack
      f = open(outfile,"r+b")
      f.seek(0x35F6D5)

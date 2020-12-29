@@ -77,6 +77,7 @@ tech_list = ""
 unlocked_magic = ""
 characters = ['Crono', 'Marle', 'Lucca', 'Frog', 'Robo', 'Ayla', 'Magus']
 char_locs = []
+quiet_mode = ""
    
 #
 # Handle the command line interface for the randomizer.
@@ -166,6 +167,10 @@ def command_line():
      unlocked_magic = unlocked_magic.upper()
      if unlocked_magic == "Y":
          flags = flags + "te"
+     quiet_mode = input("Do you want to enable quiet mode (No music)(q)? Y/N")
+     quiet_mode = quiet_mode.upper()
+     if quiet_mode == "Y":
+         flags = flags + "q"
 
 #
 # Given a tk IntVar, convert it to a Y/N value for use by the randomizer.
@@ -198,6 +203,7 @@ def handle_gui(datastore):
   global characters
   global char_locs
   global unlocked_magic
+  global quiet_mode
 
   # Hopefully get the chosen character locations
   x = 0
@@ -234,6 +240,7 @@ def handle_gui(datastore):
   quick_pendant = get_flag_value(datastore.flags['p'])
   locked_chars = get_flag_value(datastore.flags['c'])
   unlocked_magic = get_flag_value(datastore.flags['m'])
+  quiet_mode = get_flag_value(datastore.flags['q'])
   
   # source ROM
   sourcefile = datastore.inputFile.get()
@@ -270,6 +277,7 @@ def generate_rom():
      global characters
      global char_locs
      global unlocked_magic
+     global quiet_mode
      outfile = sourcefile.split(".")
      outfile = str(outfile[0])
      if flags == "":
@@ -335,6 +343,8 @@ def generate_rom():
          tech_order.take_pointer(outfile)
      elif tech_list == "Balanced Random":
          tech_order.take_pointer_balanced(outfile)
+     if quiet_mode == "Y":
+         bigpatches.write_patch("patches/nomusic.ips",outfile)
      # Tyrano Castle chest hack
      f = open(outfile,"r+b")
      f.seek(0x35F6D5)
@@ -344,7 +354,7 @@ def generate_rom():
      if lost_worlds == "Y":         
        f = open(outfile,"r+b")
        bigpatches.write_patch("patches/mysticmtnfix.ips",outfile)
-       bigpatches.write_patch("patches/losteot.ips")
+       bigpatches.write_patch("patches/losteot.ips",outfile)
      #Bangor Dome event fix if character locks are on
        if locked_chars == "Y":
          bigpatches.write_patch("patches/bangorfix.ips",outfile)

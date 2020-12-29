@@ -62,6 +62,60 @@ def generateHandler():
 def browseForRom():
   datastore.inputFile.set(askopenfilename())
 
+def flagClear():
+    datastore.difficulty.set("normal")
+    datastore.flags['g'].set(0)
+    datastore.flags['s'].set(0)
+    datastore.flags['d'].set(0)
+    datastore.flags['l'].set(0)
+    datastore.flags['b'].set(0)
+    datastore.flags['z'].set(0)
+    datastore.flags['p'].set(0)
+    datastore.flags['c'].set(0)
+    datastore.flags['m'].set(0)
+    datastore.techRando.set("Normal")
+
+def presetRace():
+    flagClear()
+    datastore.difficulty.set("normal")
+    datastore.flags['g'].set(1)
+    datastore.flags['s'].set(1)
+    datastore.flags['d'].set(1)
+    datastore.flags['z'].set(1)
+    datastore.flags['p'].set(1)
+    datastore.techRando.set("Fully Random")
+
+def presetNew():
+    flagClear()
+    datastore.difficulty.set("easy")
+    datastore.flags['g'].set(1)
+    datastore.flags['s'].set(1)
+    datastore.flags['d'].set(1)
+    datastore.flags['z'].set(1)
+    datastore.flags['p'].set(1)
+    datastore.flags['m'].set(1)
+    datastore.techRando.set("Fully Random")
+
+def presetLost():
+    flagClear()
+    datastore.difficulty.set("normal")
+    datastore.flags['g'].set(1)
+    datastore.flags['s'].set(1)
+    datastore.flags['d'].set(1)
+    datastore.flags['z'].set(1)
+    datastore.flags['l'].set(1)
+    datastore.techRando.set("Fully Random")
+
+def presetHard():
+    flagClear()
+    datastore.difficulty.set("hard")
+    datastore.flags['g'].set(1)
+    datastore.flags['s'].set(1)
+    datastore.flags['d'].set(1)
+    datastore.flags['b'].set(1)
+    datastore.flags['c'].set(1)
+    datastore.techRando.set("Balanced Random")
+
   
 #
 # Populate and return the frame where the user can pick game flags.
@@ -70,6 +124,17 @@ def getGameFlagsFrame(window):
   frame = tk.Frame(window, borderwidth = 1)
   row = 0
   pendantCheckbox = None
+
+  # Janky addition for presets because I suck at python - Future
+  #Presets Header
+  tk.Label(frame, text="Preset Selection:").grid(row=row, column=0, sticky=tk.E)
+  
+  #Preset Buttons
+  tk.Button(frame, text="Race", command=presetRace).grid(row=row, column=2)
+  tk.Button(frame, text="New Player", command=presetNew).grid(row=row, column=3)
+  tk.Button(frame, text="Lost Worlds", command=presetLost).grid(row=row, column=4)
+  tk.Button(frame, text="Hard", command=presetHard).grid(row=row, column=5)
+  row = row + 1
   
   # Dropdown for the difficulty flags
   difficultyValues = ["easy", "normal", "hard"]
@@ -150,6 +215,12 @@ def getGameFlagsFrame(window):
   var = tk.IntVar()
   datastore.flags['m'] = var
   tk.Checkbutton(frame, text="Unlocked Magic(m)", variable = var).grid(row=row, sticky=tk.W, columnspan=3)
+  row = row + 1
+
+  # Quiet Mode (No Music)
+  var = tk.IntVar()
+  datastore.flags['q'] = var
+  tk.Checkbutton(frame, text="Quiet Mode - No Music (q)", variable = var).grid(row=row, sticky=tk.W, columnspan=3)
   row = row + 1
 
   # Dropdown for the tech rando

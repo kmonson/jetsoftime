@@ -16,44 +16,9 @@ import bossscaler as boss_scale
 import techwriter as tech_order
 import randomizergui as gui
 
-def tenthousands_digit(digit):
-    digit = st.unpack(">B",digit)
-    digit = int(digit[0]) * 0x10000
-    return digit       
-def make_number(digit,digit2):
-       digit2 = st.unpack(">H",digit2)
-       digit2 = int(digit2[0])
-       number = digit + digit2
-#       print "{:X}".format(number)
-       return number
-def get_length(length):
-       length = st.unpack(">H",length)
-       length = int(length[0])
-       return length
-def write_data(length,pointer,position):
-        bRepeatable = False
-        if length == 0:
-            length = p.read(2)
-            length = get_length(length)
-            data = get_data()            
-            position += 3
-            bRepeatable = True
-        while length > 0:
-          if not bRepeatable:
-            data = get_data()
-            position += 1
-          f.seek(pointer)
-          f.write(st.pack("B",data))
-          pointer += 1
-          length -= 1
-        return position
-def get_data():
-        data = p.read(1)
-        data = st.unpack("B",data)
-        data = int(data[0])
-        return data
+
 def read_names():
-        p = open("names.txt","r")
+        p = open("names.txt", "r")
         names = p.readline()
         names = names.split(",")
         p.close

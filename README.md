@@ -1,16 +1,12 @@
 Jets of Time: An Open Ended Chrono Trigger Randomizer
 
-Version: 2.0.3
-
-Date: July 6, 2020
-
+Originally forked from:
 URL: https://github.com/Anskiy/jetsoftime/
 
-https://sites.google.com/view/ctrandoinfo/home
+Includes updates and new features from
+URL: https://github.com/futureforce14/jetsoftime
 
-Contact: https://discord.gg/cKYjHwj
-         
-Email:   cecilraster475@gmail.com
+https://sites.google.com/view/ctrandoinfo/home
 
 IMPORTANT: Read the files in the guides folder and Known Bugs.txt before playing.
 
@@ -18,17 +14,17 @@ IMPORTANT: Read the files in the guides folder and Known Bugs.txt before playing
 
 Jets of Time is a remake of Wings of Time, intended to create faster seeds while taking more liberties with the gameplay. The progression has been altered greatly, and seeds can usually be beat within the 2:30:00 mark. The gameplay is *still* mostly classic Chrono Trigger, so being good at the base game helps a lot.
 
+This fork is intended to clean up the JoT repo and update much of the code and the project to be more pythonic.
+
 --USAGE--
 
-Windows users can directly run the provided .exe, Mac and Linux users should run randomizer.py with Python 3.0 or above in the sourcefiles folder. A GUI is provided, but you can choose to run it in commandline mode by typing -c. 
-
-If on commandline mode, either enter the location of the ROM or drag and drop it into the window. Follow the onscreen instructions afterwards.
+Will update with new usage instructions as they become available.
 
 --CREDITS--
 
 Designers: Anskiy, Abyssonym
 
-Developers: Anskiy, Abyssonym, Myself086, Anguirel
+Developers: Anskiy, Abyssonym, Myself086, Anguirel, kmonson
 
 Technical Assistance: Mauron, Myself086, Lagolunatic
 

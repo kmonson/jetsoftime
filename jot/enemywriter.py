@@ -204,25 +204,25 @@ def randomize_midbosses(outfile, f):
     f.seek(0xC5D5F)
     f.write(st.pack("H", magus_hp))
     if magus_select == 0:
-        bossmutator.patch_file("patches/magus_c.txt", outfile)
+        bossmutator.patch_file("magus_c.txt", outfile)
     elif magus_select == 1:
-        bossmutator.patch_file("patches/magus_m.txt", outfile)
+        bossmutator.patch_file("magus_m.txt", outfile)
     elif magus_select == 2:
-        bossmutator.patch_file("patches/magus_l.txt", outfile)
+        bossmutator.patch_file("magus_l.txt", outfile)
     elif magus_select == 3:
-        bossmutator.patch_file("patches/magus_r.txt", outfile)
+        bossmutator.patch_file("magus_r.txt", outfile)
     elif magus_select == 4:
-        bossmutator.patch_file("patches/magus_f.txt", outfile)
+        bossmutator.patch_file("magus_f.txt", outfile)
     elif magus_select == 5:
-        bossmutator.patch_file("patches/magus_a.txt", outfile)
+        bossmutator.patch_file("magus_a.txt", outfile)
     if tyrano_element == 0:
-        bossmutator.patch_file("patches/tyrano_i.txt", outfile)
+        bossmutator.patch_file("tyrano_i.txt", outfile)
     elif tyrano_element == 1:
-        bossmutator.patch_file("patches/tyrano_l.txt", outfile)
+        bossmutator.patch_file("tyrano_l.txt", outfile)
     elif tyrano_element == 2:
-        bossmutator.patch_file("patches/tyrano_s.txt", outfile)
+        bossmutator.patch_file("tyrano_s.txt", outfile)
     elif tyrano_element == 3:
-        bossmutator.patch_file("patches/tyrano_n.txt", outfile)
+        bossmutator.patch_file("tyrano_n.txt", outfile)
 
 
 def write_enemy_stuff(drop, charm, f, enemy_id):

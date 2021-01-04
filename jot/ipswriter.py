@@ -1,5 +1,6 @@
 import struct as st
 from os import stat
+from importlib import resources
 
 
 def tenthousands_digit(digit):
@@ -49,23 +50,25 @@ def get_data():
 
 
 def write_patch(patch, outfile):
+    print(f"Writing patch {patch}")
     global p
     global f
-    p = open(patch, "r+b")
-    patch_size = stat(patch).st_size
-    position = 5
-    f = open(outfile, 'r+b')
-    while position < patch_size - 4:
-        p.seek(position)
-        pointer1 = p.read(1)
-        pointer1 = tenthousands_digit(pointer1)
-        position += 1
-        pointer2 = p.read(2)
-        pointer = make_number(pointer1, pointer2)
-        position += 2
-        length = p.read(2)
-        length = get_length(length)
-        position += 2
-        position = write_data(length, pointer, position)
-    p.close()
-    f.close()
+    with resources.path('jot.patches', patch) as patch:
+        p = open(patch, "r+b")
+        patch_size = stat(patch).st_size
+        position = 5
+        f = open(outfile, 'r+b')
+        while position < patch_size - 4:
+            p.seek(position)
+            pointer1 = p.read(1)
+            pointer1 = tenthousands_digit(pointer1)
+            position += 1
+            pointer2 = p.read(2)
+            pointer = make_number(pointer1, pointer2)
+            position += 2
+            length = p.read(2)
+            length = get_length(length)
+            position += 2
+            position = write_data(length, pointer, position)
+        p.close()
+        f.close()

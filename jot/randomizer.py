@@ -2,7 +2,9 @@ import random as rand
 import struct as st
 import sys
 from os import stat
+from pathlib import Path
 from shutil import copyfile
+from importlib import resources
 
 from . import bossscaler as boss_scale
 from . import characterwriter as char_slots
@@ -18,10 +20,8 @@ from . import treasurewriter as treasures
 
 
 def read_names():
-    p = open("names.txt", "r")
-    names = p.readline()
-    names = names.split(",")
-    p.close
+    with resources.open_text('jot', "names.txt") as p:
+        names = [x.strip() for x in p]
     return names
 
 
@@ -73,7 +73,7 @@ def command_line():
     seed = input("Enter seed(or leave blank if you want to randomly generate one).")
     if seed is None or seed == "":
         names = read_names()
-        seed = "".join(rand.choice(names) for i in range(2))
+        seed = "".join(rand.choice(names) for _ in range(2))
     rand.seed(seed)
     difficulty = input(f"Choose your difficulty \nEasy(e)/Normal(n)/Hard(h)")
     if difficulty == "n":
@@ -225,14 +225,14 @@ def generate_rom():
     global tech_list
     global seed
     global slower_ayla
-    outfile = sourcefile.split(".")
-    outfile = str(outfile[0])
+    outfile = Path(sourcefile).stem
     if flags == "":
         outfile = "%s.%s.sfc" % (outfile, seed)
     else:
         outfile = "%s.%s.%s.sfc" % (outfile, flags, seed)
     size = stat(sourcefile).st_size
     if size % 0x400 == 0:
+        print(f"Copying {sourcefile} to {outfile}")
         copyfile(sourcefile, outfile)
     elif size % 0x200 == 0:
         print("SNES header detected. Removing header from output file.")
@@ -246,25 +246,25 @@ def generate_rom():
         f.close()
     print("Applying patch. This might take a while.")
     bigpatches.write_patch("patch.ips", outfile)
-    patches.patch_file("patches/patch_codebase.txt", outfile)
+    patches.patch_file("patch_codebase.txt", outfile)
     if glitch_fixes == "Y":
-        patches.patch_file("patches/save_anywhere_patch.txt", outfile)
-        patches.patch_file("patches/unequip_patch.txt", outfile)
-        patches.patch_file("patches/fadeout_patch.txt", outfile)
-        patches.patch_file("patches/hp_overflow_patch.txt", outfile)
+        patches.patch_file("save_anywhere_patch.txt", outfile)
+        patches.patch_file("unequip_patch.txt", outfile)
+        patches.patch_file("fadeout_patch.txt", outfile)
+        patches.patch_file("hp_overflow_patch.txt", outfile)
     if fast_move == "Y":
-        patches.patch_file("patches/fast_overworld_walk_patch.txt", outfile)
-        patches.patch_file("patches/faster_epoch_patch.txt", outfile)
+        patches.patch_file("fast_overworld_walk_patch.txt", outfile)
+        patches.patch_file("faster_epoch_patch.txt", outfile)
     if sense_dpad == "Y":
-        patches.patch_file("patches/faster_menu_dpad.txt", outfile)
+        patches.patch_file("faster_menu_dpad.txt", outfile)
     if zeal_end == "Y":
-        patches.patch_file("patches/zeal_end_boss.txt", outfile)
+        patches.patch_file("zeal_end_boss.txt", outfile)
     if lost_worlds == "Y":
-        bigpatches.write_patch("patches/lost.ips", outfile)
+        bigpatches.write_patch("lost.ips", outfile)
     if lost_worlds == "Y":
         pass
     elif quick_pendant == "Y":
-        patches.patch_file("patches/fast_charge_pendant.txt", outfile)
+        patches.patch_file("fast_charge_pendant.txt", outfile)
     print("Randomizing treasures...")
     treasures.randomize_treasures(outfile, difficulty)
     hardcoded_items.randomize_hardcoded_items(outfile)
@@ -283,7 +283,7 @@ def generate_rom():
     else:
         keyitemlist = keyitems.randomize_keys(char_locs, outfile, locked_chars)
     if difficulty == "hard":
-        bigpatches.write_patch("patches/hard.ips", outfile)
+        bigpatches.write_patch("hard.ips", outfile)
     if boss_scaler == "Y":
         print("Rescaling bosses based on key items..")
         boss_scale.scale_bosses(char_locs, keyitemlist, locked_chars, outfile)
@@ -299,10 +299,10 @@ def generate_rom():
     # Mystic Mtn event fix in Lost Worlds
     if lost_worlds == "Y":
         f = open(outfile, "r+b")
-        bigpatches.write_patch("patches/mysticmtnfix.ips", outfile)
+        bigpatches.write_patch("mysticmtnfix.ips", outfile)
         # Bangor Dome event fix if character locks are on
         if locked_chars == "Y":
-            bigpatches.write_patch("patches/bangorfix.ips", outfile)
+            bigpatches.write_patch("bangorfix.ips", outfile)
         f.close()
     print("Randomization completed successfully.")
 

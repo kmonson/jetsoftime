@@ -137,5 +137,10 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-#PyCharm
+# PyCharm
 .idea/
+
+# JoT Specific
+spoiler_log.txt
+*.zip
+*.sfc
